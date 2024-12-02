@@ -1,0 +1,21 @@
+/* Style for the rotating image */
+#rotating-image {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    transition: transform 4s linear;
+  }
+
+  /* Rotation animation class */
+  .rotate {
+    animation: rotate 4s linear infinite;
+  }
+
+  /* Keyframes for rotation */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
