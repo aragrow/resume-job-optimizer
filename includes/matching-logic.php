@@ -58,6 +58,7 @@ function rjo_process_matching($resume_id, $job_id) {
             'post_status' => 'draft',
         ];
         $optimized_id = wp_insert_post($post_arr);
+
     }
 
     return $optimized_id;

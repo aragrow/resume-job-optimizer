@@ -4,7 +4,7 @@
  * Description: Matches resumes with job descriptions using AI and optimizes resumes for job postings.
  * Version: 1.0
  * Author: David Arago - ARAGROW, LLC
- * 
+ * Author URI: https://aragrow.me
  * Summary
  *
  *   resume-job-optimizer.php: Main plugin file.

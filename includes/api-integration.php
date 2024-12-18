@@ -36,7 +36,7 @@ Given a candidate's current resume and a specific job description, please:
         Exclude de html header and body tags.";
 }
 
-function rjo_send_to_gemini_api ($resume_text, $job_description) {
+function rjo_send_to_gemini_api_0 ($resume_text, $job_description) {
 
     error_log('Exec-> rjo_send_to_gemini_api');
     
@@ -100,6 +100,78 @@ function rjo_send_to_gemini_api ($resume_text, $job_description) {
         error_log("API Error: " . $responseJson['error']['message']);
     } else {
         $item = $responseJson['candidates'][0]['content']['parts'][0]['text'];
+        if (isset($item) ) {
+            $anwser = $item;
+        } else {
+            $anwser = '';  // Handle case where resume is missing
+        }
+    }
+
+    curl_close($ch);
+    
+    $anwser = [
+        'status' => (isset($responseData['error']))?false:true,
+        'anwser' => $anwser
+    ];
+
+    return $anwser;
+
+}
+
+function rjo_send_to_gemini_api ($resume_text, $job_description) {
+
+    error_log('Exec-> rjo_send_to_gemini_api');
+    
+    $prompt=  rjo_set_prompt();
+
+    // Set the API key from the environment variable
+    $apiKey = getenv('GEMINI_API_KEY');
+    if (!$apiKey) {
+        $apiKey = rjo_set_apikey();
+        if (!$apiKey) 
+            die("API_KEY eis not set.\n");
+    }
+
+    $apiURI = "https://127.0.0.1:5600/api/v1/";
+
+    // Define the payload for the request
+    $requestPayload = [
+        'resume' => $resume_text,
+        'job' => $job_description
+    ];
+
+    // Initialize cURL
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $apiURI); // Replace with the correct endpoint
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: application/json"
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestPayload));
+
+    // Disable SSL verification (for local testing only)
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    // Execute the request
+    $response = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if (curl_errno($ch)) {
+        error_log("cURL Error: " . curl_error($ch));
+        curl_close($ch);
+        return;
+    }
+
+    $responseJson = json_decode($response, true);
+   
+    error_log(print_r($responseJson,true));
+    
+    if (isset($responseJson['error'])) {
+        error_log("API Error: " . $responseJson['error']['message']);
+    } else {
+        $item = $responseJson['html_content'];
         if (isset($item) ) {
             $anwser = $item;
         } else {

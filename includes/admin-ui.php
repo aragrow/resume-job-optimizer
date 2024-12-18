@@ -7,8 +7,8 @@ function rjo_admin_page() {
     // error_log('Exec-> rjo_admin_page');
 
     add_menu_page(
-        'Resume Job Optimizer',
-        'RJO',
+        'Resume Job Optimizer Generator',
+        'RJO Gen',
         'manage_options',
         'resume-job-optimizer',
         'rjo_admin_page_html',
@@ -38,7 +38,18 @@ function rjo_admin_page_html() {
             echo '<div class="notice notice-success is-dismissible"><p>Optimized resume created successfully!</p></div>';
         } else {
             echo '<div class="notice notice-error is-dismissible"><p>Failed to create optimized resume. Please check the debug log.</p></div>';
+            exit();
         }
+
+        // Generate the edit post URL
+        $edit_url = admin_url("/?post_type=optimized&p=$result&preview=true");
+
+        echo "<div style='text-align: center; margin-top: 50px;'>
+            <p><a href='$edit_url' style='font-size: 28px; text-decoration: none; color: #0073aa;'>View Optimize Resume and Cover Letter</a></p>
+            <p style='font-size: 14px;'>Click the link above to view your newly created post.</p>
+            </div>";
+        exit;
+
     }
 
     // Fetch Resumes and Jobs
@@ -86,7 +97,8 @@ function rjo_admin_page_html() {
                     </td>
                 </tr>
             </table>
-            <?php submit_button('Optimize Resume', 'primary', 'rjo_match_submit'); ?>
+            <?php submit_button('Optimize Resume and Generate Cover Letter', 'primary', 'rjo_match_submit'); ?>
+            <div id='rjo_response' />
         </form>
     </div>
     <?php
