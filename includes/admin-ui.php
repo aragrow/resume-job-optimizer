@@ -31,8 +31,9 @@ function rjo_admin_page_html() {
     if (isset($_POST['rjo_match_submit'])) {
         $resume_id = intval($_POST['resume_id']);
         $job_id = intval($_POST['job_id']);
+        $persona = sanitize_text_field($_POST['persona']);
 
-        $result = rjo_process_matching($resume_id, $job_id);
+        $result = rjo_process_matching($resume_id, $job_id, $persona);
 
         if ($result) {
             echo '<div class="notice notice-success is-dismissible"><p>Optimized resume created successfully!</p></div>';
@@ -67,6 +68,21 @@ function rjo_admin_page_html() {
                     <th rowspan="99">
                         <img id="rotating-image" src="<?php echo $plugin_uri ?>/assets/imgs/artificial-intelligence-icon-1.png" width="65%" alt="Rotating Image">
                     </th>
+                    <th scope="row">
+                        <label for="persona">Select Persona</label>
+                    </th>
+                    <td>
+                        <select name="persona" id="persona" required>
+                            <option value="" selected>-- Select a Persona --</option>
+                             <option value="CTO for a Company">CTO for a Company</option>
+                             <option value="Small Business Owner">Small Business Owner</option>
+                             <option value="Recruiter for a Technology Agency">Recruiter for a Technology Agency</option>
+                             <option value="Hiring Manager for a Company">Hiring Manager for a Company</option>
+                             <option value="Person with a Website">Person with a Website</option>
+                        </select>
+                    </td>
+                    </tr>
+                    <tr>
                     <th scope="row">
                         <label for="resume_id">Select Resume</label>
                     </th>

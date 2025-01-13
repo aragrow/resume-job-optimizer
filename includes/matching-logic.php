@@ -1,14 +1,14 @@
 <?php
 if (!defined('ABSPATH')) exit;
 
-function rjo_process_matching($resume_id, $job_id) {
+function rjo_process_matching($resume_id, $job_id, $persona) {
 
     error_log('Exec-> rjo_process_matching');
 
     $resume = get_post($resume_id);
     $job = get_post($job_id);
 
-    if (!$resume || !$job) {
+    if (!$resume || !$job || !$persona) {
         return false;
     }
 
@@ -34,7 +34,7 @@ function rjo_process_matching($resume_id, $job_id) {
 
     $job_description .= $job->post_content;
 
-    $api_result = rjo_send_to_gemini_api($resume_text, $job_description);
+    $api_result = rjo_send_to_gemini_api($resume_text, $job_description, $persona);
    
     if (!$api_result['status']) {
         return false;
